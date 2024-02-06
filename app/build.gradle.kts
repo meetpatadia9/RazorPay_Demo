@@ -50,4 +50,6 @@ dependencies {
 
     // RazorPay
     implementation("com.razorpay:checkout:1.6.36")
+
+    implementation("com.google.code.gson:gson:2.10.1")
 }

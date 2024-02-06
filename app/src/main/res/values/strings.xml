@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">RazorPay Demo</string>
 
-    <string name="key_id">rzp_test_fdmrezegwxRO3B</string>
-    <string name="key_secret">kp85QjM8Yef7By6mXdDqoJbu</string>
+    <string name="key_id">rzp_test_LyJm9uQO7ZBLy9</string>
+    <string name="key_secret">BRndTtjSbZeWzA8JwqQdBhuU</string>
 
     <string name="pay_via_razorpay">Pay via RazorPay</string>
 </resources>

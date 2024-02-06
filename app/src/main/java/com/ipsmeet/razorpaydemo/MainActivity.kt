@@ -9,10 +9,8 @@ import com.ipsmeet.razorpaydemo.databinding.ActivityMainBinding
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
-import com.razorpay.PaymentResultListener
 import com.razorpay.PaymentResultWithDataListener
 import org.json.JSONObject
-import java.util.Objects
 
 class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, ExternalWalletListener {
 
@@ -23,15 +21,8 @@ class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, Externa
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /*
-        *  To ensure faster loading of the Checkout form,
-        *  call this method as early as possible in your checkout flow
-        * */
         Checkout.preload(applicationContext)
 
-    /*    checkout.setKeyID(getString(R.string.key_id))
-        checkout.setImage(R.mipmap.ic_launcher)
-*/
         binding.btnPayViaRazorPay.setOnClickListener {
             startPayment()
         }
@@ -41,41 +32,33 @@ class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, Externa
         val checkout = Checkout()
         checkout.setKeyID(getString(R.string.key_id))
 
-        val activity:Activity = this
+        val activity: Activity = this
 
         try {
             val orderReqObj = JSONObject()
             orderReqObj.put("name", getString(R.string.app_name))
             orderReqObj.put("description", "Testing")
-            orderReqObj.put("allow_rotation", false)
+            orderReqObj.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png")
 
             orderReqObj.put("currency", "INR")
             orderReqObj.put("amount", "100")
             orderReqObj.put("send_sms_hash", true)
-
-           /* val retryObj = JSONObject()
-            retryObj.put("enabled", true)
-            retryObj.put("max_count", 4)
-            orderReqObj.put("retry", retryObj)*/
 
             val prefillObj = JSONObject()
             prefillObj.put("email", "testing.razorpay@example.com")
             prefillObj.put("contact", "8734963629")
             orderReqObj.put("prefill", prefillObj)
 
-            /*val methodsObj = JSONObject()
-            methodsObj.put("upi" ,"1")
+            /*val retryObj = JSONObject()
+            retryObj.put("enabled", true)
+            retryObj.put("max_count", 4)
+            orderReqObj.put("retry", retryObj)*/
 
-            val checkoutJSON = JSONObject()
-            checkoutJSON.put("method", methodsObj)
-
-            val optionsObj = JSONObject()
-            optionsObj.put("checkout", checkoutJSON)
-            orderReqObj.put("options", optionsObj)*/
+            Log.d("startPayment: orderReqObj", orderReqObj.toString())
 
             checkout.open(activity, orderReqObj)
         } catch (e: Exception) {
-            Toast.makeText(this, "Error in payment: " + e.message, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Error in payment: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
     }
@@ -91,6 +74,63 @@ class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, Externa
     }
 
     override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
-
+        Log.d("onExternalWalletSelected: ", "p0: $p0")
+        Log.d("onExternalWalletSelected: ", "p1: $p1")
     }
 }
+
+/*
+    private fun startPayment() {
+        val checkout = Checkout()
+        checkout.setKeyID(getString(R.string.key_id))
+
+        val activity:Activity = this
+
+        try {
+            val orderReqObj = JSONObject()
+            orderReqObj.put("name", getString(R.string.app_name))
+            orderReqObj.put("description", "Testing")
+            orderReqObj.put("image","https://s3.amazonaws.com/rzp-mobile/images/rzp.png")
+//            orderReqObj.put("allow_rotation", false)
+
+            orderReqObj.put("currency", "INR")
+            orderReqObj.put("amount", "100")
+            orderReqObj.put("send_sms_hash", true)
+
+            val retryObj = JSONObject()
+            retryObj.put("enabled", true)
+            retryObj.put("max_count", 4)
+            orderReqObj.put("retry", retryObj)
+
+            val prefillObj = JSONObject()
+            prefillObj.put("email", "testing.razorpay@example.com")
+            prefillObj.put("contact", "8734963629")
+            orderReqObj.put("prefill", prefillObj)
+
+            val methodsObj = JSONObject()
+            methodsObj.put("upi" ,"1")
+
+            val checkoutJSON = JSONObject()
+            checkoutJSON.put("method", methodsObj)
+
+            val optionsObj = JSONObject()
+            optionsObj.put("checkout", checkoutJSON)
+            orderReqObj.put("options", optionsObj)
+
+            // Enable UPI option
+            val externalObj = JSONObject()
+            val walletsArray = JSONArray()
+            walletsArray.put("paytm")
+            walletsArray.put("gpay")
+            walletsArray.put("phonepe")
+            externalObj.put("wallets", walletsArray)
+            orderReqObj.put("external", externalObj)
+
+            Log.d("startPayment: orderReqObj", orderReqObj.toString())
+
+            checkout.open(activity, orderReqObj)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error in payment: " + e.message, Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
+    }*/
